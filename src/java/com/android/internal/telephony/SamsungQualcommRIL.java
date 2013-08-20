@@ -95,6 +95,9 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
             numApplications = IccCardStatus.CARD_MAX_APPS;
         }
         cardStatus.mApplications = new IccCardApplicationStatus[numApplications];
+        if (numApplications==1 && !isGSM){
+            cardStatus.mApplications = new IccCardApplicationStatus[numApplications+2];
+        }
 
         appStatus = new IccCardApplicationStatus();
         for (int i = 0 ; i < numApplications ; i++) {
@@ -116,10 +119,7 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
             p.readInt(); // - perso_unblock_retries
             cardStatus.mApplications[i] = appStatus;
         }
-        if (numApplications==1 && !isGSM && appStatus.app_type == appStatus.AppTypeFromRILInt(2)) { // usim
-            cardStatus.mApplications = new IccCardApplicationStatus[numApplications+2];
-            cardStatus.mGsmUmtsSubscriptionAppIndex = 0;
-            cardStatus.mApplications[cardStatus.mGsmUmtsSubscriptionAppIndex]=appStatus;
+        if (numApplications==1 && !isGSM) {
             cardStatus.mCdmaSubscriptionAppIndex = 1;
             cardStatus.mImsSubscriptionAppIndex = 2;
             IccCardApplicationStatus appStatus2 = new IccCardApplicationStatus();
