@@ -269,7 +269,7 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
     @Override
     protected Object
     responseCallList(Parcel p) {
-        samsungDriverCall = driverCallU || (driverCall && !isGSM) || mRilVersion < 7 ? false : true;
+        samsungDriverCall = (driverCall && !isGSM) || mRilVersion < 7 ? false : true;
         return super.responseCallList(p);
     }
 
@@ -561,7 +561,13 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
         String response[] = (String[])responseStrings(p);
         for(int i=0; i<2; i++){
             if (response[i]!= null){
-                response[i] = Operators.operatorReplace(response[i]);
+                if (i<2){
+                    if (response[i].equals("       Empty") || (response[i].equals("") && !isGSM)) {
+                        response[i]=operator;
+                    }
+                } else if (response[i].equals("31000")|| response[i].equals("11111") || response[i].equals("123456") || response[i].equals("31099") || || ((response[i].length()<5  || response[i].length()>6) && !isGSM)){
+                        response[i]=homeOperator;
+                }
             }
         }
         return response;
