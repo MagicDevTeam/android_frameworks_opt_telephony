@@ -269,7 +269,7 @@ public class SamsungQualcommRIL extends RIL implements CommandsInterface {
     @Override
     protected Object
     responseCallList(Parcel p) {
-        samsungDriverCall = (driverCall && !isGSM) || mRilVersion < 7 ? false : true;
+        samsungDriverCall = driverCallU || (driverCall && !isGSM) || mRilVersion < 7 ? false : true;
         return super.responseCallList(p);
     }
 
